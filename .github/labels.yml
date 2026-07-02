@@ -1,0 +1,34 @@
+# Standard label set for every Micrasolutions repo.
+# Apply with a label-sync action or the GitHub CLI:
+#   gh label create "<name>" --color <hex> --description "<desc>"
+
+- name: bug
+  color: DC2626
+  description: Something isn't working
+- name: enhancement
+  color: 2563EB
+  description: New feature or improvement
+- name: docs
+  color: 60A5FA
+  description: Documentation
+- name: good first issue
+  color: 16A34A
+  description: Good for newcomers
+- name: help wanted
+  color: 22C55E
+  description: Extra attention is welcome
+- name: triage
+  color: A1A1AA
+  description: Needs review
+- name: dependencies
+  color: 6B7280
+  description: Dependency updates
+- name: ci
+  color: 6B7280
+  description: CI/CD
+- name: wontfix
+  color: E5E7EB
+  description: This will not be worked on
+- name: duplicate
+  color: E5E7EB
+  description: Already exists

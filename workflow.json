@@ -1,0 +1,93 @@
+{
+  "name": "Micra Sales Intel",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Micra Sales Intel",
+        "formDescription": "Paste a company URL and lead. Get a full McKinsey-grade sales brief in under a minute.",
+        "formFields": {
+          "values": [
+            { "fieldLabel": "Lead name", "requiredField": true },
+            { "fieldLabel": "Company", "requiredField": true },
+            { "fieldLabel": "Website or domain", "requiredField": false },
+            { "fieldLabel": "Role or title", "requiredField": false },
+            { "fieldLabel": "Any extra context", "requiredField": false }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "form-in",
+      "name": "Lead Intake Form",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.1,
+      "position": [240, 300],
+      "webhookId": "micra-lead-research"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $env.ANTHROPIC_API_KEY }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-6\",\n  \"max_tokens\": 3000,\n  \"system\": \"You are a senior sales strategist who prepares executive-grade pre-meeting intelligence, the kind a McKinsey consultant hands a partner before a client meeting. Precise, structured, ruthlessly useful. Never invent facts: label inferences '(inferred)' and unknowns 'Unknown — verify.' Optimize so the salesperson needs no other research. Use clean markdown with clear headers and emoji anchors. Every line must earn its place.\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Prepare a complete Sales Intelligence brief.\\n\\nCompany/URL: {{ $json['Website or domain'] }}\\nLead name: {{ $json['Lead name'] }}\\nCompany: {{ $json['Company'] }}\\nRole/title: {{ $json['Role or title'] }}\\nExtra context: {{ $json['Any extra context'] }}\\n\\nProduce the brief in EXACTLY this order with markdown headers: 1. Executive Summary; 2. Buying Signals (3); 3. Personalized Ice Breakers (5); 4. Discovery Questions (5); 5. Top Business Risks; 6. Recent Company News (say 'Unknown — verify' if unsure); 7. Decision Maker Summary; 8. AI Cold Email (subject+body, under 120 words); 9. LinkedIn DM (under 60 words); 10. 30-Second Meeting Brief (bulleted); 11. CRM Summary (3-5 bullets); 12. Next Best Action. End with the line: Prepared by Micra Sales Intel.\"\n    }\n  ]\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "llm",
+      "name": "Generate Research (Claude)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 300],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 3000
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "report",
+              "name": "report",
+              "value": "={{ $json.content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract",
+      "name": "Extract Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [800, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.report }}",
+        "options": {}
+      },
+      "id": "respond",
+      "name": "Show Report",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1080, 300]
+    }
+  ],
+  "connections": {
+    "Lead Intake Form": { "main": [[{ "node": "Generate Research (Claude)", "type": "main", "index": 0 }]] },
+    "Generate Research (Claude)": { "main": [[{ "node": "Extract Report", "type": "main", "index": 0 }]] },
+    "Extract Report": { "main": [[{ "node": "Show Report", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "tags": ["micra", "product", "lead-research"]
+}
