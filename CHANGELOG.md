@@ -1,6 +1,12 @@
-# Changelog — Micra Lead Research System
+# Changelog — Micra Sales Intel
 
 All notable changes to this product. Follows Keep a Changelog / SemVer.
+
+## [1.2.1] — 2026-07-10 — Import reliability
+### Fixed
+- `workflow.json` now carries a top-level `id` and drops the loose `tags` array, matching the
+  shape n8n itself exports. Without this, `n8n import:workflow` (CLI) failed with
+  `NOT NULL constraint failed: workflow_entity.id`. Verified re-import succeeds on a live n8n.
 
 ## [1.2.0] — 2026-07-10 — Free by default (Groq)
 ### Changed

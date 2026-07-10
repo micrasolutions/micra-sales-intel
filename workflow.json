@@ -1,4 +1,5 @@
 {
+  "id": "micraSalesIntel1",
   "name": "Micra Sales Intel",
   "nodes": [
     {
@@ -7,11 +8,26 @@
         "formDescription": "Paste a company URL and lead. Get a full McKinsey-grade sales brief in under a minute.",
         "formFields": {
           "values": [
-            { "fieldLabel": "Lead name", "requiredField": true },
-            { "fieldLabel": "Company", "requiredField": true },
-            { "fieldLabel": "Website or domain", "requiredField": false },
-            { "fieldLabel": "Role or title", "requiredField": false },
-            { "fieldLabel": "Any extra context", "requiredField": false }
+            {
+              "fieldLabel": "Lead name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Company",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Website or domain",
+              "requiredField": false
+            },
+            {
+              "fieldLabel": "Role or title",
+              "requiredField": false
+            },
+            {
+              "fieldLabel": "Any extra context",
+              "requiredField": false
+            }
           ]
         },
         "responseMode": "responseNode",
@@ -22,7 +38,10 @@
       "name": "Lead Intake Form",
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.1,
-      "position": [240, 300],
+      "position": [
+        240,
+        300
+      ],
       "webhookId": "micra-lead-research"
     },
     {
@@ -32,13 +51,18 @@
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "content-type", "value": "application/json" }
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\"model\": \"openai/gpt-oss-120b\", \"max_tokens\": 4096, \"temperature\": 0.2, \"messages\": [{\"role\": \"system\", \"content\": \"You are a senior sales strategist preparing executive-grade pre-meeting intelligence. CRITICAL HONESTY RULE: you have NO internet access and cannot verify anything. Do NOT state specific funding rounds, dollar amounts, valuations, dates, executive names, headcounts, or product launches as fact unless they are extremely well-established and stable. If unsure, write 'Unknown \\u2014 verify' and tell the rep exactly what to look up. NEVER claim information is 'verified' and NEVER cite sources (press releases, TechCrunch, LinkedIn, etc.) \\u2014 you cannot access them. Inventing specifics a rep repeats to a prospect will destroy their credibility. Be sharp and specific about STRATEGY, ANGLES, and QUESTIONS (reasoned inferences \\u2014 label them '(inferred)'), but scrupulously honest about FACTS you don't have. Clean markdown, clear headers, emoji anchors. Every line earns its place.\"}, {\"role\": \"user\", \"content\": \"Prepare a complete Sales Intelligence brief.\\n\\nCompany/URL: {{ $json['Website or domain'] }}\\nLead name: {{ $json['Lead name'] }}\\nCompany: {{ $json['Company'] }}\\nRole/title: {{ $json['Role or title'] }}\\nExtra context: {{ $json['Any extra context'] }}\\n\\nProduce the brief in EXACTLY this order with markdown headers: 1. Executive Summary; 2. Buying Signals (3); 3. Personalized Ice Breakers (5); 4. Discovery Questions (5); 5. Top Business Risks; 6. Recent Company News (say 'Unknown \\u2014 verify' \\u2014 do NOT invent news); 7. Decision Maker Summary; 8. AI Cold Email (subject+body, under 120 words); 9. LinkedIn DM (under 60 words); 10. 30-Second Meeting Brief (bulleted); 11. CRM Summary (3-5 bullets); 12. Next Best Action. End with: Prepared by Micra Sales Intel.\"}]}",
-        "options": { "timeout": 120000 },
+        "options": {
+          "timeout": 120000
+        },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpBearerAuth"
       },
@@ -46,7 +70,10 @@
       "name": "Generate Research",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [520, 300],
+      "position": [
+        520,
+        300
+      ],
       "retryOnFail": true,
       "maxTries": 2,
       "waitBetweenTries": 3000
@@ -69,7 +96,10 @@
       "name": "Extract Report",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [800, 300]
+      "position": [
+        800,
+        300
+      ]
     },
     {
       "parameters": {
@@ -81,14 +111,48 @@
       "name": "Show Report",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [1080, 300]
+      "position": [
+        1080,
+        300
+      ]
     }
   ],
   "connections": {
-    "Lead Intake Form": { "main": [[{ "node": "Generate Research", "type": "main", "index": 0 }]] },
-    "Generate Research": { "main": [[{ "node": "Extract Report", "type": "main", "index": 0 }]] },
-    "Extract Report": { "main": [[{ "node": "Show Report", "type": "main", "index": 0 }]] }
+    "Lead Intake Form": {
+      "main": [
+        [
+          {
+            "node": "Generate Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Research": {
+      "main": [
+        [
+          {
+            "node": "Extract Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Report": {
+      "main": [
+        [
+          {
+            "node": "Show Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
-  "settings": { "executionOrder": "v1" },
-  "tags": ["micra", "product", "lead-research"]
+  "settings": {
+    "executionOrder": "v1"
+  }
 }
