@@ -9,8 +9,11 @@ All notable changes to this product. Follows Keep a Changelog / SemVer.
   **no credit card**, so "self-host free, forever" is now true at the install step, not just
   in marketing. Previously the workflow required a paid Anthropic key (`sk-ant-`), which broke
   the free promise for Community users on step one.
-- `INSTALL.md` / `README.md` now walk you through a free Groq key (`console.groq.com`,
-  `GROQ_API_KEY`) instead of a paid Anthropic key.
+- `INSTALL.md` / `README.md` now walk you through a free Groq key (`console.groq.com`)
+  instead of a paid Anthropic key.
+- The key is added as an n8n **Bearer Auth credential** (not an environment variable), so
+  setup works identically on **n8n Cloud, Desktop, and self-hosted** — the previous `$env`
+  approach fails on n8n Cloud, which is the path first-timers are steered toward.
 - Workflow now uses `responseMode: responseNode` (fixes an "unused Respond node" error on
   n8n 2.x) and a stricter anti-hallucination system prompt that flags "Unknown — verify".
 - Trimmed the README package table to the files actually shipped.

@@ -18,14 +18,20 @@ Any of the three works identically for this product.
 2. Copy the key (it starts with `gsk_`). Keep it handy.
 3. That's it — Groq's free tier runs this workflow at no cost. There's nothing to pay and no card to add.
 
-## Step 2 — Add the key to n8n (2 min)
-- **n8n Cloud:** Settings → **Variables/Environment** → add `GROQ_API_KEY` = your key.
-- **n8n Desktop / self-host:** add `GROQ_API_KEY=gsk_...` to your environment and restart n8n.
-
-## Step 3 — Import the workflow (1 min)
+## Step 2 — Import the workflow (1 min)
 1. In n8n: **Workflows → Import from File**.
 2. Select **`workflow.json`** from this package.
-3. Click **Save**, then toggle the workflow **Active** (top right).
+3. Click **Save**.
+
+## Step 3 — Connect your key (2 min)
+The workflow calls Groq over an authenticated HTTP request. Add your key once as a credential:
+1. Open the workflow → click the **Generate Research** node.
+2. Find **Credential to connect with** → **Create New Credential**.
+3. Choose **Bearer Auth** → paste your Groq key (the `gsk_...` value) into the **Token** field → **Save**.
+4. Back on the canvas, toggle the workflow **Active** (top right).
+
+> Why a credential (not an environment variable)? It works identically on **n8n Cloud,
+> Desktop, and self-hosted**, and your key stays encrypted in n8n — no server config needed.
 
 ## Step 4 — Run your first report (2 min)
 1. Open the workflow → click the **Lead Intake Form** node → copy the **form URL**
@@ -41,9 +47,9 @@ Any of the three works identically for this product.
 That's it. Bookmark the form URL — every submission generates a fresh brief.
 
 **Troubleshooting**
-- *No report / error:* the API key isn't set correctly. Re-check Step 2 (the variable must be named exactly `GROQ_API_KEY`).
-- *"unauthorized" / 401:* the key is wrong or wasn't picked up. Re-copy it from [console.groq.com](https://console.groq.com) → API Keys, re-save the variable, and restart n8n.
-- *Form URL 404:* the workflow isn't **Active**. Toggle it on (Step 3.3).
+- *"unauthorized" / 401:* the Bearer Auth credential is wrong. Re-open the **Generate Research** node → re-check the credential → re-paste your key from [console.groq.com](https://console.groq.com) → API Keys.
+- *No report / node error:* make sure the **Generate Research** node has the Bearer Auth credential selected (Step 3).
+- *Form URL 404:* the workflow isn't **Active**. Toggle it on (Step 3.4).
 - *Don't have n8n yet:* see Step 0 above — n8n Cloud is the fastest path.
 
 > **Note on how it works:** this tool reasons from the model's knowledge plus the lead
