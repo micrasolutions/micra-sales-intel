@@ -14,8 +14,9 @@
             { "fieldLabel": "Any extra context", "requiredField": false }
           ]
         },
-        "responseMode": "lastNode",
-        "options": {}
+        "responseMode": "responseNode",
+        "options": {},
+        "path": "micra-sales-intel"
       },
       "id": "form-in",
       "name": "Lead Intake Form",
@@ -27,22 +28,21 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.anthropic.com/v1/messages",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "x-api-key", "value": "={{ $env.ANTHROPIC_API_KEY }}" },
-            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "Authorization", "value": "=Bearer {{ $env.GROQ_API_KEY }}" },
             { "name": "content-type", "value": "application/json" }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-6\",\n  \"max_tokens\": 3000,\n  \"system\": \"You are a senior sales strategist who prepares executive-grade pre-meeting intelligence, the kind a McKinsey consultant hands a partner before a client meeting. Precise, structured, ruthlessly useful. Never invent facts: label inferences '(inferred)' and unknowns 'Unknown — verify.' Optimize so the salesperson needs no other research. Use clean markdown with clear headers and emoji anchors. Every line must earn its place.\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Prepare a complete Sales Intelligence brief.\\n\\nCompany/URL: {{ $json['Website or domain'] }}\\nLead name: {{ $json['Lead name'] }}\\nCompany: {{ $json['Company'] }}\\nRole/title: {{ $json['Role or title'] }}\\nExtra context: {{ $json['Any extra context'] }}\\n\\nProduce the brief in EXACTLY this order with markdown headers: 1. Executive Summary; 2. Buying Signals (3); 3. Personalized Ice Breakers (5); 4. Discovery Questions (5); 5. Top Business Risks; 6. Recent Company News (say 'Unknown — verify' if unsure); 7. Decision Maker Summary; 8. AI Cold Email (subject+body, under 120 words); 9. LinkedIn DM (under 60 words); 10. 30-Second Meeting Brief (bulleted); 11. CRM Summary (3-5 bullets); 12. Next Best Action. End with the line: Prepared by Micra Sales Intel.\"\n    }\n  ]\n}",
-        "options": { "timeout": 60000 }
+        "jsonBody": "={\"model\": \"openai/gpt-oss-120b\", \"max_tokens\": 4096, \"temperature\": 0.2, \"messages\": [{\"role\": \"system\", \"content\": \"You are a senior sales strategist preparing executive-grade pre-meeting intelligence. CRITICAL HONESTY RULE: you have NO internet access and cannot verify anything. Do NOT state specific funding rounds, dollar amounts, valuations, dates, executive names, headcounts, or product launches as fact unless they are extremely well-established and stable. If unsure, write 'Unknown \\u2014 verify' and tell the rep exactly what to look up. NEVER claim information is 'verified' and NEVER cite sources (press releases, TechCrunch, LinkedIn, etc.) \\u2014 you cannot access them. Inventing specifics a rep repeats to a prospect will destroy their credibility. Be sharp and specific about STRATEGY, ANGLES, and QUESTIONS (reasoned inferences \\u2014 label them '(inferred)'), but scrupulously honest about FACTS you don't have. Clean markdown, clear headers, emoji anchors. Every line earns its place.\"}, {\"role\": \"user\", \"content\": \"Prepare a complete Sales Intelligence brief.\\n\\nCompany/URL: {{ $json['Website or domain'] }}\\nLead name: {{ $json['Lead name'] }}\\nCompany: {{ $json['Company'] }}\\nRole/title: {{ $json['Role or title'] }}\\nExtra context: {{ $json['Any extra context'] }}\\n\\nProduce the brief in EXACTLY this order with markdown headers: 1. Executive Summary; 2. Buying Signals (3); 3. Personalized Ice Breakers (5); 4. Discovery Questions (5); 5. Top Business Risks; 6. Recent Company News (say 'Unknown \\u2014 verify' \\u2014 do NOT invent news); 7. Decision Maker Summary; 8. AI Cold Email (subject+body, under 120 words); 9. LinkedIn DM (under 60 words); 10. 30-Second Meeting Brief (bulleted); 11. CRM Summary (3-5 bullets); 12. Next Best Action. End with: Prepared by Micra Sales Intel.\"}]}",
+        "options": { "timeout": 120000 }
       },
       "id": "llm",
-      "name": "Generate Research (Claude)",
+      "name": "Generate Research",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [520, 300],
@@ -57,7 +57,7 @@
             {
               "id": "report",
               "name": "report",
-              "value": "={{ $json.content[0].text }}",
+              "value": "={{ $json.choices[0].message.content }}",
               "type": "string"
             }
           ]
@@ -84,8 +84,8 @@
     }
   ],
   "connections": {
-    "Lead Intake Form": { "main": [[{ "node": "Generate Research (Claude)", "type": "main", "index": 0 }]] },
-    "Generate Research (Claude)": { "main": [[{ "node": "Extract Report", "type": "main", "index": 0 }]] },
+    "Lead Intake Form": { "main": [[{ "node": "Generate Research", "type": "main", "index": 0 }]] },
+    "Generate Research": { "main": [[{ "node": "Extract Report", "type": "main", "index": 0 }]] },
     "Extract Report": { "main": [[{ "node": "Show Report", "type": "main", "index": 0 }]] }
   },
   "settings": { "executionOrder": "v1" },

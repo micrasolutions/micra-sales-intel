@@ -18,25 +18,22 @@ risks, recent news, decision-maker summary, a ready-to-send cold email and Linke
 | `prompts/lead-research.md` | The research prompt (edit to customize the report) |
 | `example-output.md` | A real sample report — read this first |
 | `demo-leads.csv` | 10 demo leads to try it on |
-| `loom-checklist.md` | Script for your demo video |
-| `landing-copy.md` | Sales page copy |
-| `gumroad-structure.md` | How the paid package is bundled |
 | `CHANGELOG.md` | Version history |
 
 ## Quick start
 1. Read **[the example report](example-output.md)** (30 seconds) — see what you're about to get.
 2. Read **INSTALL.md** (10 minutes).
-3. Import `workflow.json` into n8n, add your Anthropic API key, activate.
+3. Import `workflow.json` into n8n, add your **free** Groq API key, activate.
 4. Open the form URL, enter a lead from `demo-leads.csv`, submit.
 5. Read your first brief.
 
 ## Requirements
 - n8n — Cloud, Desktop, or self-hosted ([get n8n](https://n8n.io) if you don't have it)
-- An Anthropic API key ([console.anthropic.com](https://console.anthropic.com))
+- A **free** Groq API key ([console.groq.com](https://console.groq.com)) — no credit card required
 
 ## Customize it
 Open `prompts/lead-research.md` and edit the report structure or tone, then update the
-`system`/`content` text in the **Generate Research (Claude)** node. Everything else stays the same.
+`system`/`content` text in the **Generate Research** node. Everything else stays the same.
 
 ## Support
 Issues installing? The most common fixes are in `INSTALL.md` → Troubleshooting.

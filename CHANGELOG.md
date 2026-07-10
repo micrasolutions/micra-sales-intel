@@ -2,6 +2,19 @@
 
 All notable changes to this product. Follows Keep a Changelog / SemVer.
 
+## [1.2.0] — 2026-07-10 — Free by default (Groq)
+### Changed
+- **LLM provider switched to the Groq free tier** (`openai/gpt-oss-120b`, OpenAI-compatible
+  API). This is the exact configuration the product was verified end-to-end on — and it needs
+  **no credit card**, so "self-host free, forever" is now true at the install step, not just
+  in marketing. Previously the workflow required a paid Anthropic key (`sk-ant-`), which broke
+  the free promise for Community users on step one.
+- `INSTALL.md` / `README.md` now walk you through a free Groq key (`console.groq.com`,
+  `GROQ_API_KEY`) instead of a paid Anthropic key.
+- Workflow now uses `responseMode: responseNode` (fixes an "unused Respond node" error on
+  n8n 2.x) and a stricter anti-hallucination system prompt that flags "Unknown — verify".
+- Trimmed the README package table to the files actually shipped.
+
 ## [1.0.0] — 2026-07-02
 ### Added
 - n8n workflow (`workflow.json`): form intake → Claude research → report display
