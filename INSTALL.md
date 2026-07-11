@@ -16,7 +16,7 @@ Any of the three works identically for this product.
 ## Step 1 — Get your free Groq API key (2 min)
 1. Go to **[console.groq.com](https://console.groq.com)** → sign in (free, **no credit card**) → **API Keys** → **Create API Key**.
 2. Copy the key (it starts with `gsk_`). Keep it handy.
-3. That's it — Groq's free tier runs this workflow at no cost. There's nothing to pay and no card to add.
+3. That's it — Groq's free tier runs this workflow at no cost. There's nothing to pay and no card to add. The free tier comfortably handles about **one brief per minute** — plenty for prepping calls.
 
 ## Step 2 — Import the workflow (1 min)
 1. In n8n: **Workflows → Import from File**.
@@ -49,6 +49,7 @@ That's it. Bookmark the form URL — every submission generates a fresh brief.
 **Troubleshooting**
 - *"unauthorized" / 401:* the Bearer Auth credential is wrong. Re-open the **Generate Research** node → re-check the credential → re-paste your key from [console.groq.com](https://console.groq.com) → API Keys.
 - *No report / node error:* make sure the **Generate Research** node has the Bearer Auth credential selected (Step 3).
+- *"rate limit" / 429:* you briefly hit Groq's free tier (~1 brief/minute; 8K tokens/min, 1,000/day — plenty for call prep). Wait ~60 seconds and resubmit. It's a free-tier throttle, **not a product error**. Need more throughput? Groq's paid Developer plan lifts it.
 - *Form URL 404:* the workflow isn't **Active**. Toggle it on (Step 3.4).
 - *Don't have n8n yet:* see Step 0 above — n8n Cloud is the fastest path.
 

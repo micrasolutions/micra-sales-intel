@@ -2,6 +2,12 @@
 
 All notable changes to this product. Follows Keep a Changelog / SemVer.
 
+## [1.2.2] — 2026-07-10 — Set free-tier expectations
+### Changed
+- `INSTALL.md` now sets the Groq free-tier expectation (~1 brief/minute; 8K tokens/min, 1,000/day)
+  and adds a `429 / rate limit` troubleshooting entry. Verified against Groq's live rate-limit docs.
+  Prevents a first-run 429 from reading as a product bug (support/refund reduction).
+
 ## [1.2.1] — 2026-07-10 — Import reliability
 ### Fixed
 - `workflow.json` now carries a top-level `id` and drops the loose `tags` array, matching the
